@@ -3,12 +3,11 @@ using MicroserviceDemo.CatalogApi.Models;
 
 namespace MicroserviceDemo.CatalogApi.Context
 {
-    public class CatalogApiDbContextSeedData
+    public static class CatalogApiDbContextSeedData
     {
-        private readonly ProductManager _productManager;
-        public CatalogApiDbContextSeedData() => _productManager = new ProductManager();
+        private static readonly ProductManager _productManager = new ProductManager();
 
-        public void Seed()
+        public static void Seed()
         {
             // Check database have one product or not
             var isExistProduct = _productManager.GetFirstOrDefault(pm => true);
@@ -17,7 +16,7 @@ namespace MicroserviceDemo.CatalogApi.Context
                 _productManager.Add(GetProducts());
         }
 
-        private ICollection<Product> GetProducts()
+        private static ICollection<Product> GetProducts()
         {
             return new List<Product>()
             {

@@ -1,4 +1,6 @@
 using MicroserviceDemo.CatalogApi.HostingService;
+using MicroserviceDemo.CatalogApi.Interfaces.Manager;
+using MicroserviceDemo.CatalogApi.Manager;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,9 @@ builder.Services.AddSwaggerGen();
 
 // Call application hosting service class
 builder.Services.AddHostedService<CatalogApiHostingService>();
+
+// Dependency injection
+builder.Services.AddScoped<IProductManager, ProductManager>();
 
 var app = builder.Build();
 

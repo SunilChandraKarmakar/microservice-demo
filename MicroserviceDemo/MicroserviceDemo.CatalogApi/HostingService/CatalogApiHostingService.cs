@@ -1,5 +1,4 @@
-﻿
-using MicroserviceDemo.CatalogApi.Context;
+﻿using MicroserviceDemo.CatalogApi.Context;
 
 namespace MicroserviceDemo.CatalogApi.HostingService
 {

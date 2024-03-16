@@ -53,6 +53,25 @@ namespace MicroserviceDemo.CatalogApi.Controllers
             }
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategoryName(string categoryName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(categoryName) || string.IsNullOrWhiteSpace(categoryName))
+                    return BadRequest($"Category name cannot found! Error:- {HttpStatusCode.BadRequest}");
+
+                var getProducts = await _productManager.GetProductsByCategoryName(categoryName);
+
+                return Ok(getProducts);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<Product>> Create([FromBody] Product product)

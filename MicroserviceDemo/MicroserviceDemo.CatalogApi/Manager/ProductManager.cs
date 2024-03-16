@@ -10,5 +10,11 @@ namespace MicroserviceDemo.CatalogApi.Manager
         public ProductManager() : base(new ProductRepository())
         {
         }
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryName(string  categoryName)
+        {
+            var getProducts = await Task.Run(() => GetAll(p => p.Category.ToLower().Contains(categoryName.ToLower())).ToList());
+            return getProducts;
+        }
     }
 }

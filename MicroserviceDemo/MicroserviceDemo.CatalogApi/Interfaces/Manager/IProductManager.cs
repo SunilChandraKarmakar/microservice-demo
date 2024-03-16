@@ -5,5 +5,6 @@ namespace MicroserviceDemo.CatalogApi.Interfaces.Manager
 {
     public interface IProductManager : ICommonManager<Product>
     {
+        Task<IEnumerable<Product>> GetProductsByCategoryName(string categoryName);
     }
 }

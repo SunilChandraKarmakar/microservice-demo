@@ -1,7 +1,3 @@
-using MicroserviceDemo.CatalogApi.HostingService;
-using MicroserviceDemo.CatalogApi.Interfaces.Manager;
-using MicroserviceDemo.CatalogApi.Manager;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,22 +7,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Call application hosting service class
-builder.Services.AddHostedService<CatalogApiHostingService>();
-
-// Dependency injection
-builder.Services.AddScoped<IProductManager, ProductManager>();
+// Add redis connection string
+builder.Services.AddStackExchangeRedisCache(option =>
+{
+    option.Configuration = builder.Configuration.GetConnectionString("RedisDb");
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
-app.UseSwagger();
-
-app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

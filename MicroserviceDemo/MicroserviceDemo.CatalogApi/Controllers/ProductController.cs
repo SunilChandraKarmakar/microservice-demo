@@ -31,7 +31,7 @@ namespace MicroserviceDemo.CatalogApi.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Product>> Get(string id)
         {
@@ -53,8 +53,9 @@ namespace MicroserviceDemo.CatalogApi.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{categoryName}")]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+        [ResponseCache(Duration = 10)]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategoryName(string categoryName)
         {
             try
@@ -79,7 +80,7 @@ namespace MicroserviceDemo.CatalogApi.Controllers
             try
             {
                 // Set unique product id
-                product.Id = ObjectId.Parse(product.Id).ToString();
+                product.Id = ObjectId.GenerateNewId().ToString();
 
                 var isProductSaved = await Task.Run(() => _productManager.Add(product));
 

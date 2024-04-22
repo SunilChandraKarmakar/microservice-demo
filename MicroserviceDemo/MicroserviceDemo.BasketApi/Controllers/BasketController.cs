@@ -45,12 +45,12 @@ namespace MicroserviceDemo.BasketApi.Controllers
 
         [HttpDelete]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<string>> Delete(ShopingCart shopingCart)
+        public async Task<ActionResult<string>> Delete(string userName)
         {
-            if (string.IsNullOrEmpty(shopingCart.UserName))
+            if (string.IsNullOrEmpty(userName))
                 return BadRequest("User name is not currect! Please, try again.");
 
-            var deleteShopingCart = await _basketRepository.DeleteAsync(shopingCart);
+            var deleteShopingCart = await _basketRepository.DeleteAsync(userName);
 
             if(string.IsNullOrEmpty(deleteShopingCart))
                 return BadRequest("Shoping cart is not deleted! Please, try again.");

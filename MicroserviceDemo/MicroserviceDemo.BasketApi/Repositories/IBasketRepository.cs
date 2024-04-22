@@ -6,6 +6,6 @@ namespace MicroserviceDemo.BasketApi.Repositories
     {
         Task<ShopingCart> GetShopingCardByUserNameAsync(string userName);
         Task<ShopingCart> UpsertAsync(ShopingCart shopingCart);
-        Task<string> DeleteAsync(ShopingCart shopingCart);
+        Task<string> DeleteAsync(string userName);
     }
 }

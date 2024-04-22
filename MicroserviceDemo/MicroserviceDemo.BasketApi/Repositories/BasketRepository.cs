@@ -32,9 +32,9 @@ namespace MicroserviceDemo.BasketApi.Repositories
             return getUpsertShopingCard;
         }
 
-        public async Task<string> DeleteAsync(ShopingCart shopingCart)
+        public async Task<string> DeleteAsync(string userName)
         {
-            await _distributedCache.RemoveAsync(shopingCart.UserName);
+            await _distributedCache.RemoveAsync(userName);
             return "Basket remove successfully,";
         }
     }

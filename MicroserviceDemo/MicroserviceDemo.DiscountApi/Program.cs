@@ -1,22 +1,11 @@
-using MicroserviceDemo.BasketApi.Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
 
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Add redis connection string
-builder.Services.AddStackExchangeRedisCache(option =>
-{
-    option.Configuration = builder.Configuration.GetConnectionString("RedisDb");
-});
-
-// Dependency injection
-builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 var app = builder.Build();
 
@@ -26,10 +15,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseSwagger();
-
-app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

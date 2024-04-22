@@ -15,7 +15,7 @@
             {
                 var price = 0.00;
                 foreach (var item in ShopingCartItems)
-                    price += price + item.Price;
+                    price = price + item.Price;
 
                 return price;
             }

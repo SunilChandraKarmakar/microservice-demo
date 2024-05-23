@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroserviceDemo.BasketApi"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroserviceDemo.DiscountApi", "MicroserviceDemo.DiscountApi\MicroserviceDemo.DiscountApi.csproj", "{A3ED1764-D552-41C4-AB3E-A4705B95D123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroserviceDemo.DiscountgRPC", "MicroserviceDemo.DiscountgRPC\MicroserviceDemo.DiscountgRPC.csproj", "{FDB0BBD6-96AF-4576-8F44-C9F8811A297D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroserviceDemo.DiscountgRPC", "MicroserviceDemo.DiscountgRPC\MicroserviceDemo.DiscountgRPC.csproj", "{FDB0BBD6-96AF-4576-8F44-C9F8811A297D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using AutoMapper;
+using Grpc.Core;
 using MicroserviceDemo.DiscountgRPC.Protos;
 using MicroserviceDemo.DiscountgRPC.Repository;
 
@@ -8,11 +9,13 @@ namespace MicroserviceDemo.DiscountgRPC.Services
     {
         private readonly ICouponRepository _couponRepository;
         private readonly ILogger<DiscountService> _logger;
+        private readonly IMapper _mapper;
 
-        public DiscountService(ICouponRepository couponRepository, ILogger<DiscountService> logger)
+        public DiscountService(ICouponRepository couponRepository, ILogger<DiscountService> logger, IMapper mapper)
         {
             _couponRepository = couponRepository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public override async Task<Coupon> GetDiscountByProductId(ProductId request, ServerCallContext context)
@@ -22,14 +25,7 @@ namespace MicroserviceDemo.DiscountgRPC.Services
             if (existProductDiscount is null)
                 throw new RpcException(new Status(StatusCode.NotFound, "Product cannot found! Please, try again."));
 
-            var mapExistProductDiscount = new Coupon
-            {
-                Id = existProductDiscount.Id,
-                ProductId = existProductDiscount.ProductId,
-                Amount = existProductDiscount.Amount,
-                ProductName = existProductDiscount.ProductName,
-                Discription = existProductDiscount.Discription
-            };
+            var mapExistProductDiscount = _mapper.Map<Coupon>(existProductDiscount);
 
             //Set log
             _logger.LogInformation($"Discount retrive for Product Name: {mapExistProductDiscount.ProductName}, Amount: {mapExistProductDiscount.Amount}");

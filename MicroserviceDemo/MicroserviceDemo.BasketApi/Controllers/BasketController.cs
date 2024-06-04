@@ -1,4 +1,5 @@
-﻿using MicroserviceDemo.BasketApi.Models;
+﻿using MicroserviceDemo.BasketApi.GrpcServices;
+using MicroserviceDemo.BasketApi.Models;
 using MicroserviceDemo.BasketApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -10,7 +11,13 @@ namespace MicroserviceDemo.BasketApi.Controllers
     public class BasketController : ControllerBase
     {
         private readonly IBasketRepository _basketRepository;
-        public BasketController(IBasketRepository basketRepository) => _basketRepository = basketRepository;
+        private readonly DiscountGrpcService _discountGrpcService;
+
+        public BasketController(IBasketRepository basketRepository, DiscountGrpcService discountGrpcService)
+        {
+            _basketRepository = basketRepository;
+            _discountGrpcService = discountGrpcService;
+        }
 
         [HttpGet]
         [ProducesResponseType(typeof(ShopingCart), (int)HttpStatusCode.OK)]
@@ -33,6 +40,15 @@ namespace MicroserviceDemo.BasketApi.Controllers
         {
             if (string.IsNullOrEmpty(shopingCart.UserName))
                 return BadRequest("User name is not currect! Please, try again.");
+
+            // Check product have any discount
+            foreach (var product in shopingCart.ShopingCartItems)
+            {
+                var discount = _discountGrpcService.GetDiscountByProductIdAsync(product.ProductId);
+
+                if (discount.Result.Amount > 0)
+                    product.Price = product.Price - discount.Result.Amount;
+            }
 
             var upsertShopingCart = await _basketRepository.UpsertAsync(shopingCart);
 

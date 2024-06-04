@@ -1,4 +1,6 @@
+using MicroserviceDemo.BasketApi.GrpcServices;
 using MicroserviceDemo.BasketApi.Repositories;
+using MicroserviceDemo.DiscountgRPC.Protos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,13 @@ builder.Services.AddStackExchangeRedisCache(option =>
 {
     option.Configuration = builder.Configuration.GetConnectionString("RedisDb");
 });
+
+// Add gRPC services
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration.GetValue<string>("GrpcSetting:MicroserviceDemo.DiscountgRPC"));
+});
+builder.Services.AddScoped<DiscountGrpcService>();
 
 // Dependency injection
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();

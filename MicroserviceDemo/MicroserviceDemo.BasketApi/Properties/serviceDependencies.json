@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "redis1": {
+      "ignored": "true",
+      "type": "redis"
+    }
+  }
+}

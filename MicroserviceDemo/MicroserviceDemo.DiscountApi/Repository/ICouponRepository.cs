@@ -4,6 +4,7 @@ namespace MicroserviceDemo.DiscountApi.Repository
 {
     public interface ICouponRepository
     {
+        Task<IEnumerable<Coupon>> GetDiscounts();
         Task<Coupon> GetDiscountByProductId(string productId);
         Task<bool> CreateDiscount(Coupon coupon);
         Task<bool> UpdateDiscount(Coupon coupon);

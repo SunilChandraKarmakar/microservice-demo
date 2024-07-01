@@ -4,18 +4,18 @@ option csharp_namespace = "MicroserviceDemo.DiscountgRPC.Protos";
 
 service DiscountProtoService
 {
-	rpc GetDiscountByProductId(ProductId) returns (Coupon);
-	rpc CreateDiscount(Coupon) returns (Result);
-	rpc UpdateDiscount(Coupon) returns (Result);
-	rpc DeleteDiscount(ProductId) returns (Result);
+	rpc GetDiscountByProductId(GetDiscountByProductIdRequest) returns (CouponReturns);
+	rpc CreateDiscount(CreateDiscountRequest) returns (CouponReturns);
+	rpc UpdateDiscount(UpdateDiscountRequest) returns (CouponReturns);
+	rpc DeleteDiscount(DeleteDiscountRequest) returns (DeleteDiscountReturns);
 }
 
-message ProductId
+message GetDiscountByProductIdRequest
 {
 	string product_id = 1;
 }
 
-message Coupon
+message CouponReturns 
 {
 	int32 id = 1;
 	string product_id = 2;
@@ -24,7 +24,30 @@ message Coupon
 	double amount = 5;
 }
 
-message Result
+message CreateDiscountRequest 
+{
+	int32 id = 1;
+	string product_id = 2;
+	string product_name = 3;
+	string discription = 4;
+	double amount = 5;
+}
+
+message UpdateDiscountRequest
+{
+	int32 id = 1;
+	string product_id = 2;
+	string product_name = 3;
+	string discription = 4;
+	double amount = 5;
+}
+
+message DeleteDiscountRequest
+{
+	string product_id = 1;
+}
+
+message DeleteDiscountReturns
 {
 	bool success = 1;
 }

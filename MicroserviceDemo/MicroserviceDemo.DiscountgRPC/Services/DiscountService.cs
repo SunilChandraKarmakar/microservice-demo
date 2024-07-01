@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Grpc.Core;
+using MicroserviceDemo.DiscountgRPC.Models;
 using MicroserviceDemo.DiscountgRPC.Protos;
 using MicroserviceDemo.DiscountgRPC.Repository;
 
@@ -18,63 +19,65 @@ namespace MicroserviceDemo.DiscountgRPC.Services
             _mapper = mapper;
         }
 
-        public override async Task<Coupon> GetDiscountByProductId(ProductId request, ServerCallContext context)
+        public override async Task<CouponReturns> GetDiscountByProductId(GetDiscountByProductIdRequest request, ServerCallContext context)
         {
-            var existProductDiscount = await _couponRepository.GetDiscountByProductId(request.ProductId_);
+            var getDiscount = await _couponRepository.GetDiscountByProductId(request.ProductId);
 
-            if (existProductDiscount is null)
-                throw new RpcException(new Status(StatusCode.NotFound, "Product cannot found! Please, try again."));
+            if (getDiscount is null)
+                throw new RpcException(new Status(StatusCode.NotFound, "Discount cannot found."));
 
-            var mapExistProductDiscount = _mapper.Map<Coupon>(existProductDiscount);
+            var mapGetCoupon = _mapper.Map<CouponReturns>(getDiscount);
+            _logger.LogInformation($"Discount is retrive for Product Name = {mapGetCoupon.ProductName}, Amount = {mapGetCoupon.Amount}");
 
-            // Set log
-            _logger.LogInformation($"Discount retrive for Product Name: {mapExistProductDiscount.ProductName}, Amount: {mapExistProductDiscount.Amount}");
-
-            return mapExistProductDiscount;
+            return mapGetCoupon;
         }
 
-        public override async Task<Result> CreateDiscount(Coupon request, ServerCallContext context)
+        public override async Task<CouponReturns> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
         {
-            var coupon = _mapper.Map<Models.Coupon>(request);
-            var isCouponSaved = await _couponRepository.CreateDiscount(coupon);
+            var createCoupon = _mapper.Map<Coupon>(request);
+            var isSaved = await _couponRepository.CreateDiscount(createCoupon);
 
-            if (isCouponSaved)
+            if(isSaved)
             {
-                _logger.LogInformation($"Discount is successfully created. Product name {coupon.ProductName}");
-                return new Result { Success = true };
+                _logger.LogInformation($"Discount is ceated. Product Name = {createCoupon.ProductName}, Amount = {createCoupon.Amount}");
+
+                var mapCreateCoupon = _mapper.Map<CouponReturns>(createCoupon);
+                return mapCreateCoupon;
             }
 
-            _logger.LogInformation($"Discount is not created. Please, try again.");
-            return new Result { Success = false };
+            _logger.LogInformation($"Discount is not ceated. Try again.");
+            return new CouponReturns { Id = request.Id, ProductName = request.ProductName, ProductId = request.ProductId };
         }
 
-        public override async Task<Result> UpdateDiscount(Coupon request, ServerCallContext context)
+        public override async Task<CouponReturns> UpdateDiscount(UpdateDiscountRequest request, ServerCallContext context)
         {
-            var coupon = _mapper.Map<Models.Coupon>(request);
-            var isCouponUpdated = await _couponRepository.UpdateDiscount(coupon);
+            var updateCoupon = _mapper.Map<Coupon>(request);
+            var isUpdate = await _couponRepository.UpdateDiscount(updateCoupon);
 
-            if (isCouponUpdated)
+            if (isUpdate)
             {
-                _logger.LogInformation($"Discount is updated. Product name {coupon.ProductName}");
-                return new Result { Success = true };
+                _logger.LogInformation($"Discount is updated. Product Name = {updateCoupon.ProductName}, Amount = {updateCoupon.Amount}");
+
+                var mapUpdateCoupon = _mapper.Map<CouponReturns>(updateCoupon);
+                return mapUpdateCoupon;
             }
 
-            _logger.LogInformation($"Discount is not updated. Please, try again.");
-            return new Result { Success = false };
+            _logger.LogInformation($"Discount is not ceated. Try again.");
+            return new CouponReturns { Id = request.Id, ProductName = request.ProductName, ProductId = request.ProductId };
         }
 
-        public override async Task<Result> DeleteDiscount(ProductId request, ServerCallContext context)
+        public override async Task<DeleteDiscountReturns> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
         {
-            var isCoupnDeleted = await _couponRepository.DeleteDiscount(request.ProductId_);
+            var isDeleted = await _couponRepository.DeleteDiscount(request.ProductId);
 
-            if (isCoupnDeleted)
+            if(isDeleted)
             {
                 _logger.LogInformation($"Discount is deleted.");
-                return new Result { Success = true };
+                return new DeleteDiscountReturns { Success = true };
             }
 
-            _logger.LogInformation($"Discount is not deleted. Please, try again.");
-            return new Result { Success = false };
+            _logger.LogInformation($"Discount is not deleted.");
+            return new DeleteDiscountReturns { Success = false };
         }
     }
 }

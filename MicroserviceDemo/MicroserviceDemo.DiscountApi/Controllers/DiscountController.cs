@@ -13,6 +13,14 @@ namespace MicroserviceDemo.DiscountApi.Controllers
         public DiscountController(ICouponRepository couponRepository) => _couponRepository = couponRepository;
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Coupon>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Coupon>>> GetDiscounts()
+        {
+            var getDiscounts = await _couponRepository.GetDiscounts();
+            return Ok(getDiscounts);
+        }
+
+        [HttpGet]
         [ProducesResponseType(typeof(Coupon), (int) HttpStatusCode.OK)]
         public async Task<ActionResult<Coupon>> GetDiscountByProductId(string  productId)
         {

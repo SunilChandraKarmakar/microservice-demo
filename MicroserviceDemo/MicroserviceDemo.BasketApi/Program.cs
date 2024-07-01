@@ -17,10 +17,10 @@ builder.Services.AddStackExchangeRedisCache(option =>
     option.Configuration = builder.Configuration.GetConnectionString("RedisDb");
 });
 
-// Add gRPC services
-builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+// Add gRPC client
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(option =>
 {
-    options.Address = new Uri(builder.Configuration.GetValue<string>("GrpcSetting:MicroserviceDemo.DiscountgRPC"));
+    option.Address = new Uri("https://localhost:5004");
 });
 builder.Services.AddScoped<DiscountGrpcService>();
 

@@ -7,35 +7,41 @@ namespace MicroserviceDemo.DiscountgRPC.Repository
     public class CouponRepository : ICouponRepository
     {
         private readonly IConfiguration _configuration;
+        public CouponRepository(IConfiguration configuration) => _configuration = configuration;
 
-        public CouponRepository(IConfiguration configuration)
+        public async Task<IEnumerable<Coupon>> GetDiscounts()
         {
-            _configuration = configuration;
+            var npgSqlConnection = new NpgsqlConnection(_configuration.GetConnectionString("DiscountDB"));
+            var getDiscounts = await npgSqlConnection.QueryAsync<Coupon>
+               ("SELECT * FROM public.\"Coupons\"");
+
+            return getDiscounts;
         }
 
         public async Task<Coupon> GetDiscountByProductId(string productId)
         {
-            var npgSqlConnection = new NpgsqlConnection(_configuration.GetConnectionString("DiscountDB"));
-            var existCoupon = await npgSqlConnection.QueryFirstOrDefaultAsync<Coupon>
-                ("SELECT * FROM Coupons WHERE ProductId = @ProductId", new { ProductId = productId });
+            try
+            {
+                var npgSqlConnection = new NpgsqlConnection(_configuration.GetConnectionString("DiscountDB"));
+                var existCoupon = await npgSqlConnection.QueryFirstOrDefaultAsync<Coupon>
+                   ("SELECT * FROM public.\"Coupons\" WHERE \"ProductId\" = @ProductId", new { ProductId = productId });
 
-            if (existCoupon == null)
-                return new Coupon() { ProductName = "No Product", Amount = 0 };
+                if (existCoupon == null)
+                    return new Coupon() { ProductName = "No Product", Amount = 0 };
 
-            return existCoupon;
+                return existCoupon;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> CreateDiscount(Coupon coupon)
         {
             var npgSqlConnection = new NpgsqlConnection(_configuration.GetConnectionString("DiscountDB"));
-            var newCoupon = await npgSqlConnection.ExecuteAsync("INSERT INTO Coupons(ProductId, ProductName, Discription, Amount) " +
-                "VALUES(@ProductId, @ProductName, @Discription, @Amount)", new
-                {
-                    ProductId = coupon.ProductId,
-                    ProductName = coupon.ProductName,
-                    Discription = coupon.Discription,
-                    Amount = coupon.Amount
-                });
+            var newCoupon = await npgSqlConnection.ExecuteAsync("INSERT INTO public.\"Coupons\"(\"ProductId\", \"ProductName\", \"Discription\", \"Amount\") VALUES(@ProductId, @ProductName, @Discription, @Amount)",
+              new { ProductId = coupon.ProductId, ProductName = coupon.ProductName, Discription = coupon.Discription, Amount = coupon.Amount });
 
             if (newCoupon > 0)
                 return true;
@@ -46,8 +52,7 @@ namespace MicroserviceDemo.DiscountgRPC.Repository
         public async Task<bool> UpdateDiscount(Coupon coupon)
         {
             var npgSqlConnection = new NpgsqlConnection(_configuration.GetConnectionString("DiscountDB"));
-            var updateCoupon = await npgSqlConnection.ExecuteAsync("UPDATE Coupons SET ProductId = @ProductId, " +
-                "ProductName = ProductName, Discription = @Discription, Amount = @Amount", new { ProductId = coupon.ProductId, ProductName = coupon.ProductName, Discription = coupon.Discription, Amount = coupon.Amount });
+            var updateCoupon = await npgSqlConnection.ExecuteAsync("UPDATE public.\"Coupons\" SET \"ProductId\" = @ProductId, \"ProductName\" = @ProductName, \"Discription\" = @Discription, \"Amount\" = @Amount WHERE \"Id\" = @Id", new { Id = coupon.Id, ProductId = coupon.ProductId, ProductName = coupon.ProductName, Discription = coupon.Discription, Amount = coupon.Amount });
 
             if (updateCoupon > 0)
                 return true;
@@ -58,7 +63,7 @@ namespace MicroserviceDemo.DiscountgRPC.Repository
         public async Task<bool> DeleteDiscount(string productId)
         {
             var npgSqlConnection = new NpgsqlConnection(_configuration.GetConnectionString("DiscountDB"));
-            var deleteCoupon = await npgSqlConnection.ExecuteAsync("DELETE FROM Coupons WHERE ProductId = @ProductId",
+            var deleteCoupon = await npgSqlConnection.ExecuteAsync("DELETE FROM public.\"Coupons\" WHERE \"ProductId\" = @ProductId",
                 new { ProductId = productId });
 
             if (deleteCoupon > 0)

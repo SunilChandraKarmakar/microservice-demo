@@ -1,6 +1,7 @@
 ﻿using MicroserviceDemo.BasketApi.GrpcServices;
 using MicroserviceDemo.BasketApi.Models;
 using MicroserviceDemo.BasketApi.Repositories;
+using MicroserviceDemo.DiscountgRPC.Protos;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -44,10 +45,10 @@ namespace MicroserviceDemo.BasketApi.Controllers
             // Check product have any discount
             foreach (var product in shopingCart.ShopingCartItems)
             {
-                var discount = _discountGrpcService.GetDiscountByProductIdAsync(product.ProductId);
+                var productId = new GetDiscountByProductIdRequest { ProductId =  product.ProductId };
+                var getDiscount = await _discountGrpcService.GetDiscountByProductId(productId);
 
-                if (discount.Result.Amount > 0)
-                    product.Price = product.Price - discount.Result.Amount;
+                product.Price = product.Price - getDiscount.Amount;
             }
 
             var upsertShopingCart = await _basketRepository.UpsertAsync(shopingCart);

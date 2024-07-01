@@ -2,21 +2,19 @@
 
 namespace MicroserviceDemo.BasketApi.GrpcServices
 {
-    public class DiscountGrpcService : DiscountProtoService.DiscountProtoServiceClient
+    public class DiscountGrpcService
     {
-        private readonly DiscountProtoService.DiscountProtoServiceClient _discountProtoServiceClient;
+        private readonly DiscountProtoService.DiscountProtoServiceClient _discountProtoGrpcClient;
 
         public DiscountGrpcService(DiscountProtoService.DiscountProtoServiceClient discountProtoServiceClient)
         {
-            _discountProtoServiceClient = discountProtoServiceClient;
+            _discountProtoGrpcClient = discountProtoServiceClient;
         }
 
-        public async Task<Coupon> GetDiscountByProductIdAsync(string productId)
+        public async Task<CouponReturns> GetDiscountByProductId(GetDiscountByProductIdRequest request)
         {
-            var productIdRequest = new ProductId { ProductId_ = productId };
-            var getDiscountByProductId =  await _discountProtoServiceClient.GetDiscountByProductIdAsync(productIdRequest);
-
-            return getDiscountByProductId;
+            var getDiscount = await _discountProtoGrpcClient.GetDiscountByProductIdAsync(request);
+            return getDiscount;
         }
     }
 }

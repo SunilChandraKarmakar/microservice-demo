@@ -27,7 +27,7 @@ namespace MicroserviceDemo.DiscountgRPC.Repository
                    ("SELECT * FROM public.\"Coupons\" WHERE \"ProductId\" = @ProductId", new { ProductId = productId });
 
                 if (existCoupon == null)
-                    return new Coupon() { ProductName = "No Product", Amount = 0 };
+                    return new Coupon() { ProductName = "No Product", Amount = 0, Discription = "No", ProductId = Guid.Empty.ToString(), Id = 0 };
 
                 return existCoupon;
             }

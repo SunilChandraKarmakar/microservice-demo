@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{99
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Api", "Ordering\Ordering.Api\Ordering.Api.csproj", "{913F79FB-AB5D-4ADC-92CE-54BA32903B04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Model", "Ordering\Ordering.Model\Ordering.Model.csproj", "{EE1EB780-267D-46D5-A86C-66227FDE681E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Model", "Ordering\Ordering.Model\Ordering.Model.csproj", "{EE1EB780-267D-46D5-A86C-66227FDE681E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Applications", "Ordering\Ordering.Applications\Ordering.Applications.csproj", "{615FE23B-19DC-4890-AF08-67E82CF7D5BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,10 @@ Global
 		{EE1EB780-267D-46D5-A86C-66227FDE681E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE1EB780-267D-46D5-A86C-66227FDE681E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE1EB780-267D-46D5-A86C-66227FDE681E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{615FE23B-19DC-4890-AF08-67E82CF7D5BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{615FE23B-19DC-4890-AF08-67E82CF7D5BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{615FE23B-19DC-4890-AF08-67E82CF7D5BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{615FE23B-19DC-4890-AF08-67E82CF7D5BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{99A098C4-1413-4727-8300-9FF0E402921F} = {EC9AC652-F268-47BD-A231-92CE7E817C47}
 		{913F79FB-AB5D-4ADC-92CE-54BA32903B04} = {99A098C4-1413-4727-8300-9FF0E402921F}
 		{EE1EB780-267D-46D5-A86C-66227FDE681E} = {99A098C4-1413-4727-8300-9FF0E402921F}
+		{615FE23B-19DC-4890-AF08-67E82CF7D5BA} = {99A098C4-1413-4727-8300-9FF0E402921F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {559B9FEE-6786-4DF7-A789-691369C35ECA}

@@ -5,11 +5,11 @@ using Ordering.Applications.Features.OrderLogic.Model;
 
 namespace Ordering.Applications.Features.OrderLogic.Queries
 {
-    public class GetOrdersByUserNameQuery : IRequest<IEnumerable<OrderModel>>
+    public class GetOrdersByUserNameQuery : IRequest<IEnumerable<OrderGridModel>>
     {
         public string UserName { get; set; }
 
-        public class Handler : IRequestHandler<GetOrdersByUserNameQuery, IEnumerable<OrderModel>>
+        public class Handler : IRequestHandler<GetOrdersByUserNameQuery, IEnumerable<OrderGridModel>>
         {
             private readonly IOrderRepository _orderRepository;
             private readonly IMapper _mapper;
@@ -20,11 +20,11 @@ namespace Ordering.Applications.Features.OrderLogic.Queries
                 _mapper = mapper;
             }
 
-            public async Task<IEnumerable<OrderModel>> Handle(GetOrdersByUserNameQuery request, 
+            public async Task<IEnumerable<OrderGridModel>> Handle(GetOrdersByUserNameQuery request, 
                 CancellationToken cancellationToken)
             {
                 var getOrdersByUserName = await _orderRepository.GetOrdersByUserNameAsync(request.UserName);
-                var mapResult = _mapper.Map<IEnumerable<OrderModel>>(getOrdersByUserName);
+                var mapResult = _mapper.Map<IEnumerable<OrderGridModel>>(getOrdersByUserName);
 
                 return mapResult;
             }

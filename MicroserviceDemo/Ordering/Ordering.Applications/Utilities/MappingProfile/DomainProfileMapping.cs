@@ -10,13 +10,15 @@ namespace Ordering.Applications.Utilities.MappingProfile
         {
             // Order mapping
             CreateMap<Order, OrderModel>();
-            CreateMap<OrderModel, Order>();
+            CreateMap<OrderModel, Order>()
+                .ForMember(d => d.Address, s => s.MapFrom(m => m.Address))
+                .ForMember(d => d.Payment, s => s.MapFrom(m => m.Payment));
             CreateMap<Order, OrderGridModel>();
             CreateMap<OrderGridModel, Order>();
 
             // Address mapping
             CreateMap<Address, AddressModel>();
-            CreateMap<AddressModel, AddressModel>();
+            CreateMap<AddressModel, Address>();
 
             // Payment mapping
             CreateMap<Payment, PaymentModel>();

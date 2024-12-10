@@ -18,6 +18,8 @@ namespace Ordering.Infrastructure.Repositories.OrderRepository
         public async Task<IEnumerable<Order>> GetOrdersByUserNameAsync(string userName)
         {
             var getOrders = await _context.Orders
+                .Include(o => o.Address)
+                .Include(o => o.Payment)
                 .Where(o => o.UserName.ToLower() ==  userName.ToLower())
                 .ToListAsync();
 

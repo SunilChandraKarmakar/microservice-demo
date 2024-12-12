@@ -1,3 +1,4 @@
+using MassTransit;
 using MicroserviceDemo.BasketApi.GrpcServices;
 using MicroserviceDemo.BasketApi.Repositories;
 using MicroserviceDemo.DiscountgRPC.Protos;
@@ -23,6 +24,15 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
     option.Address = new Uri("https://localhost:5004");
 });
 builder.Services.AddScoped<DiscountGrpcService>();
+
+// Configure rabitMq configuration
+builder.Services.AddMassTransit(configure =>
+{
+    configure.UsingRabbitMq((busRegisterContext, busFactoryConfiguration) =>
+    {
+        busFactoryConfiguration.Host(builder.Configuration["EventBusSettings:RabitMqHost"]);
+    });
+});
 
 // Dependency injection
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();

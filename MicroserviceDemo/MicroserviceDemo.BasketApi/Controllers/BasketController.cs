@@ -1,4 +1,7 @@
-﻿using MicroserviceDemo.BasketApi.GrpcServices;
+﻿using AutoMapper;
+using EventBus.Messages.Events;
+using MassTransit;
+using MicroserviceDemo.BasketApi.GrpcServices;
 using MicroserviceDemo.BasketApi.Models;
 using MicroserviceDemo.BasketApi.Repositories;
 using MicroserviceDemo.DiscountgRPC.Protos;
@@ -13,11 +16,16 @@ namespace MicroserviceDemo.BasketApi.Controllers
     {
         private readonly IBasketRepository _basketRepository;
         private readonly DiscountGrpcService _discountGrpcService;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IMapper _mapper;
 
-        public BasketController(IBasketRepository basketRepository, DiscountGrpcService discountGrpcService)
+        public BasketController(IBasketRepository basketRepository, DiscountGrpcService discountGrpcService,
+            IPublishEndpoint publishEndpoint, IMapper mapper)
         {
             _basketRepository = basketRepository;
             _discountGrpcService = discountGrpcService;
+            _publishEndpoint = publishEndpoint;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -73,6 +81,26 @@ namespace MicroserviceDemo.BasketApi.Controllers
                 return BadRequest("Shoping cart is not deleted! Please, try again.");
 
             return Ok(deleteShopingCart);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<string>> OrderCheckout(OrderCheckout orderCheckout)
+        {
+            // Get exist item in the basket
+            var existItem = await _basketRepository.GetShopingCardByUserNameAsync(orderCheckout.OrderModel.UserName);
+
+            if (existItem is null)
+                return BadRequest("Basket is empty! Try again.");
+
+            // Publish event using rabitMQ
+            var mapOrderCheckoutModel = _mapper.Map<OrderCheckoutEvent>(orderCheckout);
+            await _publishEndpoint.Publish(mapOrderCheckoutModel);
+
+            // Remove exist basket
+            var deleteShopingCart = await _basketRepository.DeleteAsync(orderCheckout.OrderModel.UserName);
+
+            return "Ok";
         }
     }
 }

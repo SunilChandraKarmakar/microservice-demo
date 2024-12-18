@@ -1,6 +1,6 @@
-﻿namespace EventBus.Messages.Events
+﻿namespace MicroserviceDemo.BasketApi.Models
 {
-    public class OrderCheckoutEvent : BaseEvent
+    public class OrderCheckout
     {
         public OrderModel OrderModel { get; set; }
         public PaymentModel PaymentModel { get; set; }
